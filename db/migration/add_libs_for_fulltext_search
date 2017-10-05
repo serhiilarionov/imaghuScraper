@@ -1,0 +1,27 @@
+CREATE TEXT SEARCH CONFIGURATION imaghu_english ( COPY = pg_catalog.english );
+
+CREATE TEXT SEARCH DICTIONARY imaghu_english_ispell (
+    TEMPLATE = ispell,
+    DictFile = en_us,
+    AffFile = en_us,
+    StopWords = english
+);
+
+CREATE TEXT SEARCH DICTIONARY imaghu_english_stem (
+    TEMPLATE = snowball,
+    Language = english,
+    StopWords = english
+);
+
+/*CREATE TEXT SEARCH DICTIONARY imaghu_english_thesaurus (
+    TEMPLATE = thesaurus,
+    DictFile = mythesaurus,
+    Dictionary = english_stem
+);*/
+
+ALTER TEXT SEARCH CONFIGURATION imaghu_english
+    ALTER MAPPING FOR asciiword, asciihword, hword_asciipart,
+                      word, hword, hword_part
+    WITH /*imaghu_english_thesaurus, */imaghu_english_ispell, imaghu_english_stem;
+
+SET default_text_search_config = 'imaghu_english';
